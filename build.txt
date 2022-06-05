@@ -1,0 +1,3 @@
+displayName = Bossjam
+author = Various
+version = 0.1
