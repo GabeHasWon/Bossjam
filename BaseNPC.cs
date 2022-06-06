@@ -46,7 +46,16 @@ namespace Bossjam
                 _init = true;
             }
             else
+            {
+                if (CurrentAttack.ChooseNextAttack(this))
+                {
+                    CurrentAttack.ResetNPC(this);
+                    CurrentAttack = CurrentAttack.GetNextAttack(this);
+                    return;
+                }
+
                 CurrentAttack.AI(this);
+            }
         }
 
         public virtual void OnInit() { }
@@ -69,5 +78,6 @@ namespace Bossjam
         public override void PostDraw(SpriteBatch spriteBatch, Color drawColor) => CurrentAttack.PostDrawNPC(this, drawColor);
 
         public Color LightingAt() => Lighting.GetColor((int)(npc.Center.X / 16f), (int)(npc.Center.Y / 16f));
+        public Player Target() => Main.player[npc.target];
     }
 }

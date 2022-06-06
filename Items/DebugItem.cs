@@ -1,3 +1,6 @@
+using Bossjam.NPCs.Tubble;
+using Microsoft.Xna.Framework;
+using Terraria;
 using Terraria.ID;
 using Terraria.ModLoader;
 
@@ -7,33 +10,39 @@ namespace Bossjam.Items
 	{
 		public override void SetStaticDefaults() 
 		{
-			// DisplayName.SetDefault("DebugItem"); // By default, capitalization in classnames will add spaces to the display name. You can customize the display name here by uncommenting this line.
 			Tooltip.SetDefault("This is a basic modded sword.");
 		}
 
-		public override void SetDefaults() 
-		{
-			item.damage = 50;
-			item.melee = true;
-			item.width = 40;
-			item.height = 40;
-			item.useTime = 20;
-			item.useAnimation = 20;
-			item.useStyle = 1;
-			item.knockBack = 6;
-			item.value = 10000;
-			item.rare = 2;
-			item.UseSound = SoundID.Item1;
-			item.autoReuse = true;
-		}
+        public override void SetDefaults()
+        {
+            item.damage = 50;
+            item.melee = true;
+            item.width = 40;
+            item.height = 40;
+            item.useTime = 1;
+            item.useAnimation = 1;
+            item.useStyle = ItemUseStyleID.SwingThrow;
+            item.knockBack = 6;
+            item.value = 10000;
+            item.rare = ItemRarityID.Green;
+            item.UseSound = SoundID.Item1;
+            item.autoReuse = false;
+        }
 
-		public override void AddRecipes() 
-		{
-			ModRecipe recipe = new ModRecipe(mod);
-			recipe.AddIngredient(ItemID.DirtBlock, 10);
-			recipe.AddTile(TileID.WorkBenches);
-			recipe.SetResult(this);
-			recipe.AddRecipe();
-		}
-	}
+        public override bool UseItem(Player player)
+        {
+            //ModContent.GetInstance<TubbleWorld>().bedPosition = Main.MouseWorld;
+            //Dust.NewDustPerfect(Main.MouseWorld, DustID.Cloud);
+            //Dust.NewDustPerfect(Main.MouseWorld + new Vector2(110, 90), DustID.Cloud);
+
+            Vector2 bed = ModContent.GetInstance<TubbleWorld>().bedPosition;
+            NPC.NewNPC((int)bed.X, (int)bed.Y, ModContent.NPCType<TubbleBoss>());
+
+            //Point p = Main.MouseWorld.ToTileCoordinates();
+            //Tile t = Framing.GetTileSafely(p.X, p.Y);
+            //if (t.type == TileID.Dirt)
+            //    t.type = TileID.LivingWood;
+            return true;
+        }
+    }
 }

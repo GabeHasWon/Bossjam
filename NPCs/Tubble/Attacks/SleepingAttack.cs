@@ -16,7 +16,7 @@ namespace Bossjam.NPCs.Tubble.Attacks
             if (++npc.npc.frameCounter >= AnimationTime)
                 npc.npc.frameCounter = 0;
 
-            npc.frame = (int)(npc.npc.ai[0] / (AnimationTime * 0.5f));
+            npc.frame = (int)(npc.npc.frameCounter / (AnimationTime * 0.5f));
 
             if (_jumpedOn)
                 return;
@@ -26,26 +26,28 @@ namespace Bossjam.NPCs.Tubble.Attacks
                 Player p = Main.player[i];
                 if (p.active && !p.dead && p.velocity.Y > 0)
                 {
-                    Rectangle groundBox = new Rectangle((int)npc.npc.position.X, (int)npc.npc.position.Y, npc.npc.width, 8);
+                    Rectangle groundBox = new Rectangle((int)npc.npc.position.X, (int)npc.npc.position.Y + 48, npc.npc.width, 8);
                     Rectangle jumpBox = new Rectangle((int)p.position.X, (int)p.Bottom.Y, p.width, 4);
+
                     if (groundBox.Intersects(jumpBox))
                     {
-                        p.velocity.Y = -12;
+                        p.velocity.Y = -14;
                         _jumpedOn = true;
                     }
                 }
             }
         }
 
-        public override bool ChooseNextAttack() => false;
-        public override BaseAttack GetNextAttack() => this;
+        public override bool ChooseNextAttack(BaseNPC npc) => _jumpedOn;
+        public override BaseAttack GetNextAttack(BaseNPC npc) => new WakeUpAttack();
+        public override void ResetNPC(BaseNPC npc) => npc.npc.frameCounter = 0;
 
         public override bool PreDrawNPC(BaseNPC npc, Color drawColor)
         {
             Texture2D sleepyFrog = npc.mod.GetTexture("NPCs/Tubble/SleepyTubble");
-            Point loc = new Point(0, npc.frame * 92);
+            Point loc = new Point(0, npc.frame * 184);
 
-            Main.spriteBatch.Draw(sleepyFrog, npc.npc.position - Main.screenPosition, new Rectangle(loc.X, loc.Y, 110, 90), npc.LightingAt());
+            Main.spriteBatch.Draw(sleepyFrog, npc.npc.position - Main.screenPosition, new Rectangle(loc.X, loc.Y, 220, 180), npc.LightingAt());
             return false;
         }
     }
