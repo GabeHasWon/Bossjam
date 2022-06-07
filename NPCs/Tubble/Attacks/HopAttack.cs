@@ -18,7 +18,7 @@ namespace Bossjam.NPCs.Tubble.Attacks
                 npc.npc.TargetClosest(false);
                 npc.npc.noTileCollide = true;
 
-                if (npc.npc.DistanceSQ(npc.Target().Center) < 300 * 300)
+                if (npc.npc.DistanceSQ(npc.Target().Center) < 350 * 350)
                     npc.npc.velocity.X = Main.rand.NextFloat(4.5f, 6f) * Math.Sign(npc.Target().Center.X - npc.npc.Center.X);
                 else
                     npc.npc.velocity.X = Main.rand.NextFloat(4.5f, 6f) * Main.rand.Next(new int[] { -1, 1 });
@@ -35,9 +35,11 @@ namespace Bossjam.NPCs.Tubble.Attacks
                 {
                     npc.npc.ai[1] = 1;
                     npc.npc.velocity.X = 0;
+
+                    ScreenShakePlayer.ShakeAction(ScreenShakePlayer.DistanceShake(npc.npc.Center, 30, 3, 1000));
                 }
 
-                if (Collision.SolidCollision(npc.npc.TopRight - new Vector2(42, 0), 4, npc.npc.height / 2)) //Right wall collision
+                void SetStunnedValues()
                 {
                     npc.npc.ai[1] = -1;
                     npc.npc.ai[2] = 1;
@@ -45,7 +47,14 @@ namespace Bossjam.NPCs.Tubble.Attacks
                     npc.npc.noTileCollide = false;
                     npc.npc.StrikeNPCNoInteraction(Main.rand.Next(3, 8), 0f, -1, false, false);
                     npc.melee = false;
+
+                    ScreenShakePlayer.ShakeAction(ScreenShakePlayer.DistanceShake(npc.npc.Center, 30, 3, 1000));
                 }
+
+                if (npc.npc.velocity.X > 0 && Collision.SolidCollision(npc.npc.TopRight - new Vector2(42, 0), 4, npc.npc.height / 2)) //Right wall collision
+                    SetStunnedValues();
+                if (npc.npc.velocity.X < 0 && Collision.SolidCollision(npc.npc.position + new Vector2(42), 4, npc.npc.height / 2)) //Right wall collision
+                    SetStunnedValues();
             }
             else if (npc.npc.ai[1] > 0) //Landed pause
                 npc.npc.ai[1]++;

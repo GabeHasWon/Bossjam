@@ -33,6 +33,8 @@ namespace Bossjam.NPCs.Tubble.Attacks
                 {
                     npc.npc.ai[1] = 1;
                     npc.npc.velocity.X = 0;
+
+                    ScreenShakePlayer.ShakeAction(ScreenShakePlayer.DistanceShake(npc.npc.Center, 30, 3.5f, 1000));
                 }
             }
             else if (npc.npc.ai[1] > 0)
