@@ -8,6 +8,8 @@ namespace Bossjam.NPCs.Tubble.Projectiles
 {
     public class TubbleTongue : ModProjectile
     {
+        public const int ShootSpeed = 15;
+
         public Vector2 SpawnOrigin { get => new Vector2(projectile.ai[0], projectile.ai[1]); set => (projectile.ai[0], projectile.ai[1]) = (value.X, value.Y); }
 
         public NPC Target => Main.npc[target];
@@ -56,7 +58,7 @@ namespace Bossjam.NPCs.Tubble.Projectiles
                 Target.Center = projectile.Center + _relativePos;
 
                 if (_time > 30)
-                    projectile.velocity = projectile.DirectionTo(SpawnOrigin) * 17;
+                    projectile.velocity = projectile.DirectionTo(SpawnOrigin) * ShootSpeed * 1.2f;
 
                 if (projectile.DistanceSQ(SpawnOrigin) < 20 * 20)
                 {

@@ -19,7 +19,7 @@ namespace Bossjam.NPCs.Tubble.Attacks
         {
             npc.npc.ai[0]++;
 
-            if (npc.npc.ai[0] == 60)
+            if (npc.npc.ai[0] == 60) //Spawn NPCs if they haven't been spawned yet
             {
                 if (_morsels.Count == 0)
                 {
@@ -31,19 +31,22 @@ namespace Bossjam.NPCs.Tubble.Attacks
                     }
                 }
             }
-            else if (npc.npc.ai[0] == 120)
+            else if (npc.npc.ai[0] == 120) //Shoot tongue
             {
                 _tongueIndex = Projectile.NewProjectile(npc.npc.Center, Vector2.Zero, ModContent.ProjectileType<TubbleTongue>(), 20, 1f);
 
                 var tongue = Tongue.modProjectile as TubbleTongue;
                 tongue.SpawnOrigin = npc.npc.Center;
                 tongue.target = _morsels.Dequeue();
-                Tongue.velocity = Tongue.DirectionTo(tongue.Target.Center) * 15f;
+                Tongue.velocity = Tongue.DirectionTo(tongue.Target.Center) * TubbleTongue.ShootSpeed;
             }
             else if (npc.npc.ai[0] > 120)
             {
                 if (!Tongue.active && _morsels.Count > 0)
+                {
+                    (npc as TubbleBoss).morselsEaten++;
                     npc.npc.ai[0] = 50;
+                }
             }
         }
 
@@ -52,6 +55,7 @@ namespace Bossjam.NPCs.Tubble.Attacks
 
         public override void ResetNPC(BaseNPC npc)
         {
+            (npc as TubbleBoss).morselsEaten++;
             npc.npc.ai[0] = 0;
         }
     }

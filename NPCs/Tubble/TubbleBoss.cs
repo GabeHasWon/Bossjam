@@ -11,6 +11,7 @@ namespace Bossjam.NPCs.Tubble
         public override BaseAttack BaseAttack => new SleepingAttack();
 
         internal sbyte lastStunDir = 0;
+        internal sbyte morselsEaten = 0;
 
         public override void SetStaticDefaults()
         {
