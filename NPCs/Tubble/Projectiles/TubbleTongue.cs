@@ -31,7 +31,6 @@ namespace Bossjam.NPCs.Tubble.Projectiles
             projectile.friendly = false;
             projectile.hostile = true;
             projectile.height = 28;
-            projectile.alpha = 30;
             projectile.width = 18;
             projectile.penetrate = -1;
             projectile.timeLeft = 60000;

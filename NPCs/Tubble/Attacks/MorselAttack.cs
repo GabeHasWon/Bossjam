@@ -51,7 +51,14 @@ namespace Bossjam.NPCs.Tubble.Attacks
         }
 
         public override bool ChooseNextAttack(BaseNPC npc) => _morsels.Count == 0 && !Tongue.active && npc.npc.ai[0] > 120;
-        public override BaseAttack GetNextAttack(BaseNPC npc) => new HopAttack();
+
+        public override BaseAttack GetNextAttack(BaseNPC npc)
+        {
+            BaseAttack t = new HopAttack();
+            if ((npc as TubbleBoss).morselsEaten < 9)
+                t = new SpewBubbleAttack();
+            return t;
+        }
 
         public override void ResetNPC(BaseNPC npc)
         {
