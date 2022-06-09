@@ -8,7 +8,7 @@ namespace Bossjam.NPCs.Tubble.Projectiles
 {
     public class TubbleTongue : ModProjectile
     {
-        public const int ShootSpeed = 15;
+        public const int ShootSpeed = 17;
 
         public Vector2 SpawnOrigin { get => new Vector2(projectile.ai[0], projectile.ai[1]); set => (projectile.ai[0], projectile.ai[1]) = (value.X, value.Y); }
 

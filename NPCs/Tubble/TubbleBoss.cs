@@ -36,19 +36,11 @@ namespace Bossjam.NPCs.Tubble
                 Dust.NewDust(npc.position, npc.width, npc.height, DustID.Blood, hitDirection);
         }
 
-        public bool OnPlatforms()
+        public bool OnGround()
         {
-            Point pos = new Vector2(npc.position.X, npc.Bottom.Y).ToTileCoordinates();
-            for (int i = 0; i < npc.width / 16f; ++i)
-            {
-                Tile t = Framing.GetTileSafely(pos.X + i, pos.Y + 1);
-                if (t.active() && Main.tileSolid[t.type] && !TileID.Sets.Platforms[t.type])
-                {
-                    Dust.NewDust(pos.ToWorldCoordinates() + new Vector2(i * 16, 16), 1, 1, DustID.Cloud);
-                    return false;
-                }
-            }
-            return true;
+            if (npc.spriteDirection <= 0)
+                return Collision.SolidCollision(new Vector2(npc.position.X, npc.Bottom.Y) + new Vector2(66, -8), npc.width - 66, 10);
+            return Collision.SolidCollision(new Vector2(npc.position.X, npc.Bottom.Y) + new Vector2(0, -8), npc.width - 66, 10);
         }
     }
 }

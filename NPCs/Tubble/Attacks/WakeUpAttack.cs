@@ -18,18 +18,19 @@ namespace Bossjam.NPCs.Tubble.Attacks
             if (timer == 60)
             {
                 npc.npc.velocity.Y = -20;
+                npc.npc.noTileCollide = true;
                 _xVel = Main.rand.NextFloat(-1f, 1f);
             }
             else if (timer > 60 && npc.npc.ai[1] == 0)
             {
-                npc.npc.noTileCollide = npc.npc.velocity.Y < 0 || !Collision.SolidCollision(npc.npc.Bottom - new Vector2(0, 8), npc.npc.width, 8);
+                npc.npc.noTileCollide = npc.npc.velocity.Y < 0 || !(npc as TubbleBoss).OnGround();
                 npc.npc.velocity.X = _xVel;
                 npc.npc.spriteDirection = Math.Sign(npc.npc.velocity.X);
 
                 if (npc.npc.velocity.Y > 0)
                     npc.npc.velocity.Y *= 1.05f;
 
-                if (npc.npc.collideY && !(npc as TubbleBoss).OnPlatforms())
+                if (!npc.npc.noTileCollide && (npc as TubbleBoss).OnGround())
                 {
                     npc.npc.ai[1] = 1;
                     npc.npc.velocity.X = 0;

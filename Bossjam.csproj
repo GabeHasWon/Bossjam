@@ -13,4 +13,9 @@
   <ItemGroup>
     <PackageReference Include="tModLoader.CodeAssist" Version="0.1.*" />
   </ItemGroup>
+  <ItemGroup>
+    <Reference Include="StructureHelper">
+      <HintPath>..\OldCrown\lib\StructureHelper_v1.1.1.dll</HintPath>
+    </Reference>
+  </ItemGroup>
 </Project>
