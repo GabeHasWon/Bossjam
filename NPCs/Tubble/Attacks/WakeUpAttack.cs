@@ -1,5 +1,4 @@
 ﻿using Bossjam.NPCs.Attacks;
-using Microsoft.Xna.Framework;
 using System;
 using Terraria;
 

@@ -19,7 +19,7 @@ namespace Bossjam.NPCs.Tubble.Projectiles
             projectile.height = 32;
             projectile.width = 32;
             projectile.penetrate = -1;
-            projectile.timeLeft = 15 * 60;
+            projectile.timeLeft = 8 * 60;
         }
 
         public override void AI()
@@ -33,7 +33,7 @@ namespace Bossjam.NPCs.Tubble.Projectiles
 
         public override bool OnTileCollide(Vector2 oldVelocity)
         {
-            Main.PlaySound(SoundID.Item10, projectile.position);
+            Main.PlaySound(SoundID.Item54, projectile.position);
 
             if (projectile.velocity.X != oldVelocity.X)
                 projectile.velocity.X = -oldVelocity.X;

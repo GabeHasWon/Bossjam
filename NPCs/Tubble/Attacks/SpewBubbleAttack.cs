@@ -3,6 +3,7 @@ using Bossjam.NPCs.Tubble.Projectiles;
 using Microsoft.Xna.Framework;
 using Terraria;
 using Terraria.ModLoader;
+using Terraria.Utilities;
 
 namespace Bossjam.NPCs.Tubble.Attacks
 {
@@ -12,11 +13,32 @@ namespace Bossjam.NPCs.Tubble.Attacks
         {
             npc.npc.ai[0]++;
 
-            if (npc.npc.ai[0] > 60 && npc.npc.ai[0] % 10 == 0 && npc.npc.ai[0] <= 120)
+            if (npc.npc.ai[0] > 60 && npc.npc.ai[0] % 10 == 0 && npc.npc.ai[0] <= 100)
             {
                 npc.npc.TargetClosest();
                 Vector2 vel = npc.npc.DirectionTo(npc.Target().Center).RotatedByRandom(MathHelper.ToRadians(5)) * Main.rand.NextFloat(6f, 10f);
-                Projectile.NewProjectile(npc.npc.Center, vel, ModContent.ProjectileType<TubbleBubble>(), 30, 0f);
+                int type = ModContent.ProjectileType<TubbleBubble>();
+
+                if (Main.rand.NextBool(1))
+                {
+                    type = ModContent.ProjectileType<BigTubbleBubble>();
+                    vel *= 0.8f;
+                }
+
+                int proj = Projectile.NewProjectile(npc.npc.Center, vel, type, type == ModContent.ProjectileType<TubbleBubble>() ? 30 : 40, 0f);
+
+                if (type == ModContent.ProjectileType<BigTubbleBubble>())
+                {
+                    Projectile bubble = Main.projectile[proj];
+                    BigTubbleBubble bigBubble = bubble.modProjectile as BigTubbleBubble;
+
+                    WeightedRandom<byte> contents = new WeightedRandom<byte>();
+                    contents.Add(BigTubbleBubble.NoContents);
+                    contents.Add(BigTubbleBubble.Skull, 0.7f);
+                    contents.Add(BigTubbleBubble.Ladybug, 0.5f);
+
+                    bigBubble.contents = contents;
+                }
             }
         }
 

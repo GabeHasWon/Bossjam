@@ -78,6 +78,8 @@ namespace Bossjam.NPCs.Tubble.Attacks
 
                 if (npc.npc.collideY)
                     npc.npc.velocity.X *= 0.75f;
+                else
+                    npc.npc.velocity.Y += 0.2f;
 
                 npc.npc.ai[2]++;
 

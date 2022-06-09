@@ -18,7 +18,7 @@ namespace Bossjam.NPCs.Tubble.Adds
 
         public override void Defaults()
         {
-            npc.lifeMax = 50;
+            npc.lifeMax = 150;
             npc.damage = 0;
             npc.defense = 0;
             npc.width = (int)Size.X;

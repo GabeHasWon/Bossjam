@@ -68,24 +68,23 @@ namespace Bossjam.NPCs.Tubble.Attacks
                 tongue.SpawnOrigin = npc.npc.Center;
                 tongue.target = _morsels.Dequeue();
 
-                if (!tongue.Target.active) //Make sure target isn't dead
+                while (!tongue.Target.active) //Check for missing flies
                 {
-                    while (!tongue.Target.active)
+                    if (_morsels.Count == 0)
                     {
-                        if (_morsels.Count == 0)
-                        {
-                            Tongue.Kill();
-                            return;
-                        }
-                        else
-                            tongue.target = _morsels.Dequeue();
+                        Tongue.Kill();
+                        return;
                     }
+                    else
+                        tongue.target = _morsels.Dequeue();
                 }
 
                 Tongue.velocity = Tongue.DirectionTo(tongue.Target.Center) * TubbleTongue.ShootSpeed;
             }
             else if (npc.npc.ai[0] > SpawnTongueTick)
             {
+                npc.npc.spriteDirection = System.Math.Sign(Tongue.position.X - npc.npc.position.X);
+
                 if (!Tongue.active && _morsels.Count > 0)
                 {
                     (npc as TubbleBoss).morselsEaten++;
@@ -99,7 +98,7 @@ namespace Bossjam.NPCs.Tubble.Attacks
         public override BaseAttack GetNextAttack(BaseNPC npc)
         {
             BaseAttack t = new HopAttack();
-            if ((npc as TubbleBoss).morselsEaten >= 9)
+            if ((npc as TubbleBoss).morselsEaten <= 6)
                 t = new SpewBubbleAttack();
             return t;
         }

@@ -1,6 +1,4 @@
-﻿using Terraria.ModLoader;
-
-namespace Bossjam.NPCs.Attacks
+﻿namespace Bossjam.NPCs.Attacks
 {
     class EmptyAttack : BaseAttack
     {

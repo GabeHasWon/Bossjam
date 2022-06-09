@@ -2,7 +2,6 @@
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Terraria;
-using Terraria.ID;
 using Terraria.ModLoader;
 
 namespace Bossjam
@@ -11,7 +10,7 @@ namespace Bossjam
     {
         public abstract BaseAttack BaseAttack { get; }
 
-        public BaseAttack CurrentAttack = null;
+        public BaseAttack CurrentAttack = new EmptyAttack();
 
         private bool _init = false;
 
@@ -49,8 +48,15 @@ namespace Bossjam
             {
                 if (CurrentAttack.ChooseNextAttack(this))
                 {
+                    string oldAttackName = CurrentAttack.GetType().Name;
+
                     CurrentAttack.ResetNPC(this);
                     CurrentAttack = CurrentAttack.GetNextAttack(this);
+
+                    if (CurrentAttack is null)
+                    {
+                        mod.Logger.Debug($"{npc.TypeName} gave null error after passing from {oldAttackName}\nWhat why");
+                    }
                     return;
                 }
 
@@ -75,6 +81,7 @@ namespace Bossjam
         public virtual void OnHit(int hitDirection, double damage) { }
 
         public override bool PreDraw(SpriteBatch spriteBatch, Color drawColor) => CurrentAttack.PreDrawNPC(this, drawColor);
+
         public override void PostDraw(SpriteBatch spriteBatch, Color drawColor) => CurrentAttack.PostDrawNPC(this, drawColor);
 
         public Color LightingAt() => Lighting.GetColor((int)(npc.Center.X / 16f), (int)(npc.Center.Y / 16f));
