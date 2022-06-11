@@ -1,7 +1,11 @@
 ﻿using Bossjam.NPCs.Attacks;
+using Bossjam.NPCs.Tubble.Adds;
+using Bossjam.NPCs.Tubble.Projectiles;
 using Microsoft.Xna.Framework;
 using System;
 using Terraria;
+using Terraria.ID;
+using Terraria.ModLoader;
 using Terraria.Utilities;
 
 namespace Bossjam.NPCs.Tubble.Attacks
@@ -59,6 +63,7 @@ namespace Bossjam.NPCs.Tubble.Attacks
 
                     tubble.lastStunDir = dir;
 
+                    SpawnDebris();
                     ScreenShakePlayer.ShakeAction(ScreenShakePlayer.DistanceShake(npc.npc.Center, 30, 3, 1000));
                 }
 
@@ -85,6 +90,28 @@ namespace Bossjam.NPCs.Tubble.Attacks
 
                 if (npc.npc.ai[2] > 120)
                     npc.npc.ai[1] = 1;
+            }
+        }
+
+        private void SpawnDebris()
+        {
+            Vector2 bed = ModContent.GetInstance<TubbleWorld>().bedPosition;
+            Vector2 ceiling = bed - new Vector2(0, 1400);
+
+            Vector2 RandomCeiling() => ceiling - new Vector2(Main.rand.NextFloat(-400, 500), Main.rand.NextFloat(-100, 200));
+
+            for (int i = 0; i < 18; ++i)
+                Gore.NewGore(RandomCeiling(), Vector2.Zero, GoreID.TreeLeaf_Jungle);
+
+            for (int i = 0; i < 5; ++i)
+                Projectile.NewProjectile(RandomCeiling(), Vector2.UnitY * Main.rand.NextFloat(0, 3f), ModContent.ProjectileType<SkullDrop>(), 0, 0);
+
+            for (int i = 0; i < 3; ++i)
+            {
+                Vector2 p = RandomCeiling();
+                int npc = NPC.NewNPC((int)p.X, (int)p.Y, ModContent.NPCType<Ladybug>());
+
+                (Main.npc[npc].modNPC as Ladybug).falling = true;
             }
         }
 

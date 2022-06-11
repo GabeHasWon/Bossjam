@@ -8,6 +8,8 @@ namespace Bossjam.NPCs.Tubble.Adds
     {
         public override BaseAttack BaseAttack => new EmptyAttack();
 
+        internal bool falling = false;
+
         public override void SetStaticDefaults()
         {
             DisplayName.SetDefault("Ladybug");
@@ -25,6 +27,19 @@ namespace Bossjam.NPCs.Tubble.Adds
 
             animationType = NPCID.MushiLadybug;
             aiType = NPCID.MushiLadybug;
+        }
+
+        public override bool PreAI()
+        {
+            if (Collision.SolidCollision(npc.position, npc.width, npc.height + 4))
+                falling = false;
+
+            if (falling)
+                npc.rotation += 0.2f;
+            else
+                npc.rotation *= 0.98f;
+
+            return !falling || System.Math.Abs(npc.rotation) < 0.5f;
         }
 
         public override void OnInit() => melee = true;

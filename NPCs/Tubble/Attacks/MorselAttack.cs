@@ -13,6 +13,8 @@ namespace Bossjam.NPCs.Tubble.Attacks
         private const int SpawnNPCTick = 50;
         private const int SpawnTongueTick = 90;
 
+        private const int MaxEnemies = 4;
+
         private readonly Queue<int> _morsels = new Queue<int>();
 
         private Projectile Tongue => Main.projectile[_tongueIndex];
@@ -20,25 +22,24 @@ namespace Bossjam.NPCs.Tubble.Attacks
 
         public override void AI(BaseNPC npc)
         {
-
             npc.npc.ai[0]++;
 
-            if (npc.npc.ai[0] == SpawnNPCTick) //Spawn NPCs if they haven't been spawned yet
+            if (npc.npc.ai[0] == SpawnNPCTick) //Spawn NPCs
             {
                 if (_morsels.Count == 0)
                 {
-                    for (int i = 0; i < 3; ++i)
+                    for (int i = 0; i < MaxEnemies; ++i)
                     {
                         Vector2 bed = ModContent.GetInstance<TubbleWorld>().bedPosition;
                         Vector2 pos = bed - new Vector2(Main.rand.NextFloat(-420, 620), Main.rand.NextFloat(140, 550));
 
-                        bool abovePos = i == 2; //Alternate position
-                        if (i == 1)
+                        bool abovePos = i >= MaxEnemies / 1.5f; //Alternate position
+                        if (i == 1 || i == 2)
                         {
                             int initialDist = 500;
 
                             pos = npc.Target().Center + (npc.npc.DirectionTo(npc.Target().Center) * initialDist);
-                            while (Collision.SolidCollision(pos - MorselFly.Size / 2f, (int)MorselFly.Size.X, (int)MorselFly.Size.Y) || pos.Y > bed.Y)
+                            while (Collision.SolidCollision(pos - MorselFly.Size / 2f, (int)MorselFly.Size.X, (int)MorselFly.Size.Y) || pos.Y > bed.Y || pos.X < bed.X - 500 || pos.X > bed.X + 500)
                             {
                                 pos = npc.Target().Center + (npc.npc.DirectionTo(npc.Target().Center) * initialDist);
 
@@ -89,6 +90,10 @@ namespace Bossjam.NPCs.Tubble.Attacks
                 {
                     (npc as TubbleBoss).morselsEaten++;
                     npc.npc.ai[0] = 50;
+
+                    int heal = Main.rand.Next(30, 45);
+                    npc.npc.life += heal;
+                    npc.npc.HealEffect(heal);
                 }
             }
         }
@@ -98,7 +103,7 @@ namespace Bossjam.NPCs.Tubble.Attacks
         public override BaseAttack GetNextAttack(BaseNPC npc)
         {
             BaseAttack t = new HopAttack();
-            if ((npc as TubbleBoss).morselsEaten <= 6)
+            if ((npc as TubbleBoss).morselsEaten <= MaxEnemies * 2)
                 t = new SpewBubbleAttack();
             return t;
         }

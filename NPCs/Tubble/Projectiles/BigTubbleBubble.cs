@@ -24,6 +24,7 @@ namespace Bossjam.NPCs.Tubble.Projectiles
             projectile.width = 64;
             projectile.penetrate = -1;
             projectile.timeLeft = 10 * 60;
+            projectile.scale = Main.rand.NextFloat(0.9f, 1.1f);
         }
 
         public override void AI()
@@ -51,9 +52,15 @@ namespace Bossjam.NPCs.Tubble.Projectiles
         public override void Kill(int timeLeft)
         {
             if (contents == Skull)
-                Projectile.NewProjectile(projectile.Center, projectile.velocity, ModContent.ProjectileType<SkullDrop>(), 0, 0);
+            {
+                int proj = Projectile.NewProjectile(projectile.Center, projectile.velocity, ModContent.ProjectileType<SkullDrop>(), 0, 0);
+                Main.projectile[proj].scale = Main.rand.NextFloat(0.9f, 1.1f);
+            }
             else if (contents == Ladybug)
-                NPC.NewNPC((int)projectile.Center.X, (int)projectile.Center.Y, ModContent.NPCType<Adds.Ladybug>(), 0, 0, 0, 0, 0, Player.FindClosest(projectile.Center, 0, 0));
+            {
+                int npc = NPC.NewNPC((int)projectile.Center.X, (int)projectile.Center.Y, ModContent.NPCType<Adds.Ladybug>(), 0, 0, 0, 0, 0, Player.FindClosest(projectile.Center, 0, 0));
+                Main.npc[npc].scale = Main.rand.NextFloat(0.9f, 1.1f);
+            }
         }
 
         public override bool PreDraw(SpriteBatch spriteBatch, Color lightColor)

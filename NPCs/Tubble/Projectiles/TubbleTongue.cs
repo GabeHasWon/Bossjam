@@ -49,8 +49,37 @@ namespace Bossjam.NPCs.Tubble.Projectiles
                 projectile.Kill();
 
             if (_missed)
+            {
+                MissedAI();
                 return;
+            }
 
+            NotMissedAI();
+        }
+
+        private void MissedAI()
+        {
+            if (Collision.SolidCollision(projectile.position, projectile.width, projectile.height))
+            {
+                _contact = true;
+                _time = -180;
+
+                projectile.velocity = Vector2.Zero;
+            }
+
+            if (_contact && _time <= 0)
+                _time++;
+            else if (_contact && _time > 0)
+            {
+                projectile.velocity = projectile.DirectionTo(SpawnOrigin) * ShootSpeed * 1.5f;
+
+                if (projectile.DistanceSQ(SpawnOrigin) < 20 * 20)
+                    projectile.Kill();
+            }
+        }
+
+        private void NotMissedAI()
+        {
             if (_contact)
             {
                 _time++;
