@@ -29,6 +29,14 @@ namespace Bossjam.NPCs.Tubble.Projectiles
 
             if (projectile.velocity.Y > -2)
                 projectile.velocity.Y -= projectile.velocity.X * 0.001f;
+
+            if (NPC.AnyNPCs(ModContent.NPCType<TubbleBoss>()))
+            {
+                Vector2 bed = ModContent.GetInstance<TubbleWorld>().bedPosition;
+
+                if (projectile.position.Y < bed.Y - 600)
+                    projectile.velocity.Y += 0.07f;
+            }
         }
 
         public override bool OnTileCollide(Vector2 oldVelocity)
@@ -42,6 +50,18 @@ namespace Bossjam.NPCs.Tubble.Projectiles
                 projectile.velocity.Y = -oldVelocity.Y;
 
             return false;
+        }
+
+        public override void Kill(int timeLeft)
+        {
+            Main.PlaySound(SoundID.Item54, projectile.position);
+
+            int dustCount = Main.rand.Next(4, 9);
+            for (int i = 0; i < dustCount; ++i)
+            {
+                Vector2 speed = Main.rand.NextVector2Circular(0.5f, 0.5f);
+                Dust.NewDust(projectile.Center, 0, 0, DustID.BubbleBurst_Blue, speed.X * .5f, speed.Y * .5f, 0, default, Main.rand.NextFloat(0.5f, 1f));
+            }
         }
     }
 }

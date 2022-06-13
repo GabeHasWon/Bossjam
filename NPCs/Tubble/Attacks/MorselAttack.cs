@@ -34,7 +34,7 @@ namespace Bossjam.NPCs.Tubble.Attacks
                         Vector2 pos = bed - new Vector2(Main.rand.NextFloat(-420, 620), Main.rand.NextFloat(140, 550));
 
                         bool abovePos = i >= MaxEnemies / 1.5f; //Alternate position
-                        if (i == 1 || i == 2)
+                        if (i == 1)
                         {
                             int initialDist = 500;
 
@@ -84,7 +84,12 @@ namespace Bossjam.NPCs.Tubble.Attacks
             }
             else if (npc.npc.ai[0] > SpawnTongueTick)
             {
-                npc.npc.spriteDirection = System.Math.Sign(Tongue.position.X - npc.npc.position.X);
+                if (Tongue.active) //To fix a possible NaN (and paranoia)
+                {
+                    float dif = Tongue.position.X - npc.npc.position.X;
+                    if (!float.IsNaN(dif))
+                        npc.npc.spriteDirection = System.Math.Sign(dif);
+                }
 
                 if (!Tongue.active && _morsels.Count > 0)
                 {
@@ -92,8 +97,16 @@ namespace Bossjam.NPCs.Tubble.Attacks
                     npc.npc.ai[0] = 50;
 
                     int heal = Main.rand.Next(30, 45);
-                    npc.npc.life += heal;
-                    npc.npc.HealEffect(heal);
+                    if (npc.npc.life + heal <= npc.npc.lifeMax)
+                    {
+                        npc.npc.life += heal;
+                        npc.npc.HealEffect(heal);
+                    }
+                    else if (npc.npc.life != npc.npc.lifeMax)
+                    {
+                        npc.npc.HealEffect(npc.npc.lifeMax - npc.npc.life);
+                        npc.npc.life = npc.npc.lifeMax;
+                    }
                 }
             }
         }

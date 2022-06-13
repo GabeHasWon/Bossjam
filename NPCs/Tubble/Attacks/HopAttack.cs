@@ -42,6 +42,13 @@ namespace Bossjam.NPCs.Tubble.Attacks
                 npc.npc.spriteDirection = Math.Sign(npc.npc.velocity.X);
                 npc.melee = npc.npc.velocity.Y > 0;
 
+                if (npc.npc.velocity.Y < -2f)
+                    tubble.SetFrame(1);
+                else if (npc.npc.velocity.Y < 2)
+                    tubble.SetFrame(0);
+                else
+                    tubble.SetFrame(3);
+
                 if (!npc.npc.noTileCollide && tubble.OnGround()) //Land
                 {
                     npc.npc.ai[1] = 1;
@@ -49,6 +56,17 @@ namespace Bossjam.NPCs.Tubble.Attacks
 
                     tubble.lastStunDir = 0;
 
+                    (float left, float right) = tubble.GetAdjustedSides();
+                    for (int i = 0; i < 8; ++i)
+                    {
+                        float x = MathHelper.Lerp(left, right, i / 8f);
+
+                        Vector2 vel = new Vector2(Main.rand.NextFloat(-0.2f, 0.2f), Main.rand.NextFloat(-2f, 0));
+                        Gore.NewGore(new Vector2(x, npc.npc.Bottom.Y), vel, Main.rand.Next(11, 14), Main.rand.NextFloat(0.2f, 0.5f));
+                    }
+
+                    Main.PlaySound(SoundID.DD2_OgreGroundPound, npc.npc.Bottom);
+                    Collision.HitTiles(new Vector2(left, npc.npc.Bottom.Y), new Vector2(0, 2), npc.npc.width - 66, 10);
                     ScreenShakePlayer.ShakeAction(ScreenShakePlayer.DistanceShake(npc.npc.Center, 30, 3, 1000));
                 }
 
@@ -74,11 +92,13 @@ namespace Bossjam.NPCs.Tubble.Attacks
             }
             else if (npc.npc.ai[1] > 0) //Landed pause
             {
+                tubble.SetFrame(0);
                 npc.npc.ai[1]++;
                 npc.melee = false;
             }
             else if (npc.npc.ai[2] > 0) //Stunned pause
             {
+                tubble.SetFrame(0);
                 npc.npc.noTileCollide = !tubble.OnGround();
 
                 if (npc.npc.collideY)

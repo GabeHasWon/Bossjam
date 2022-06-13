@@ -1,4 +1,5 @@
 ﻿using Bossjam.NPCs.Attacks;
+using Microsoft.Xna.Framework;
 using Terraria;
 using Terraria.ID;
 
@@ -35,11 +36,19 @@ namespace Bossjam.NPCs.Tubble.Adds
                 falling = false;
 
             if (falling)
+            {
                 npc.rotation += 0.2f;
+
+                if (npc.rotation > MathHelper.Pi) //Clamp rotation so it doesn't spin on the ground a bunch
+                    npc.rotation = -MathHelper.Pi;
+                
+                if (npc.rotation < -MathHelper.Pi)
+                    npc.rotation = MathHelper.Pi;
+            }
             else
                 npc.rotation *= 0.98f;
 
-            return !falling || System.Math.Abs(npc.rotation) < 0.5f;
+            return !falling && System.Math.Abs(npc.rotation) < 0.5f;
         }
 
         public override void OnInit() => melee = true;

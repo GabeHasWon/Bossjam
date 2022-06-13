@@ -30,10 +30,18 @@ namespace Bossjam.NPCs.Tubble.Projectiles
         public override void AI()
         {
             projectile.velocity.X *= 0.98f;
-            projectile.velocity.Y *= 0.998f;
+            projectile.velocity.Y *= 0.99f;
 
             if (projectile.velocity.Y > -0.5f)
                 projectile.velocity.Y -= projectile.velocity.X * 0.001f;
+
+            if (NPC.AnyNPCs(ModContent.NPCType<TubbleBoss>()))
+            {
+                Vector2 bed = ModContent.GetInstance<TubbleWorld>().bedPosition;
+
+                if (projectile.position.Y < bed.Y - 600)
+                    projectile.velocity.Y += 0.05f;
+            }
         }
 
         public override bool OnTileCollide(Vector2 oldVelocity)
@@ -59,7 +67,8 @@ namespace Bossjam.NPCs.Tubble.Projectiles
             else if (contents == Ladybug)
             {
                 int npc = NPC.NewNPC((int)projectile.Center.X, (int)projectile.Center.Y, ModContent.NPCType<Adds.Ladybug>(), 0, 0, 0, 0, 0, Player.FindClosest(projectile.Center, 0, 0));
-                Main.npc[npc].scale = Main.rand.NextFloat(0.9f, 1.1f);
+
+                (Main.npc[npc].modNPC as Adds.Ladybug).falling = true;
             }
         }
 

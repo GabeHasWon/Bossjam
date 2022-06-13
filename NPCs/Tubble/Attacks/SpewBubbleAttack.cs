@@ -15,7 +15,8 @@ namespace Bossjam.NPCs.Tubble.Attacks
 
             if (npc.npc.ai[0] > 60 && npc.npc.ai[0] % 5 == 0 && npc.npc.ai[0] <= 100)
             {
-                npc.npc.TargetClosest();
+                npc.npc.TargetClosest(true);
+                npc.npc.spriteDirection = npc.Target().Center.X < npc.npc.Center.X ? -1 : 1;
                 Vector2 vel = npc.npc.DirectionTo(npc.Target().Center).RotatedByRandom(MathHelper.ToRadians(5)) * Main.rand.NextFloat(8f, 12f);
                 int type = ModContent.ProjectileType<TubbleBubble>();
 
@@ -40,6 +41,11 @@ namespace Bossjam.NPCs.Tubble.Attacks
                     bigBubble.contents = contents;
                 }
             }
+
+            if (npc.npc.ai[0] > 60 && npc.npc.ai[0] <= 100)
+                (npc as TubbleBoss).SetFrame(3);
+            else
+                (npc as TubbleBoss).SetFrame(0);
         }
 
         public override bool ChooseNextAttack(BaseNPC npc) => npc.npc.ai[0] == 140;

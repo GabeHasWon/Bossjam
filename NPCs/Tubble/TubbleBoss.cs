@@ -16,6 +16,8 @@ namespace Bossjam.NPCs.Tubble
         public override void SetStaticDefaults()
         {
             DisplayName.SetDefault("Tubble");
+
+            Main.npcFrameCount[npc.type] = 4;
         }
 
         public override void Defaults()
@@ -38,9 +40,23 @@ namespace Bossjam.NPCs.Tubble
 
         public bool OnGround()
         {
+            Point frameSize = new Point(254, 192);
+
             if (npc.spriteDirection <= 0)
-                return Collision.SolidCollision(new Vector2(npc.position.X, npc.Bottom.Y) + new Vector2(66, -8), npc.width - 66, 10);
-            return Collision.SolidCollision(new Vector2(npc.position.X, npc.Bottom.Y) + new Vector2(0, -8), npc.width - 66, 10);
+                return Collision.SolidCollision(new Vector2(npc.position.X, npc.position.Y + frameSize.Y - 10) + new Vector2(66, -8), npc.width - 66, 10);
+            return Collision.SolidCollision(new Vector2(npc.position.X, npc.position.Y + frameSize.Y - 10) + new Vector2(0, -8), npc.width - 66, 10);
+        }
+
+        public (float, float) GetAdjustedSides()
+        {
+            if (npc.spriteDirection <= 0)
+                return (npc.position.X + 66, npc.position.X + npc.width);
+            return (npc.position.X, npc.position.X + npc.width - 66);
+        }
+
+        public void SetFrame(int frame)
+        {
+            npc.frame.Y = frame * 194;
         }
     }
 }
