@@ -41,7 +41,7 @@ namespace Bossjam.NPCs.Tubble.Projectiles
 
         public override bool OnTileCollide(Vector2 oldVelocity)
         {
-            Main.PlaySound(SoundID.Item54, projectile.position);
+            Main.PlaySound(SoundID.Item54.SoundId, (int)projectile.Center.X, (int)projectile.Center.Y, SoundID.Item54.Style, 0.5f);
 
             if (projectile.velocity.X != oldVelocity.X)
                 projectile.velocity.X = -oldVelocity.X;

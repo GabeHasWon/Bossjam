@@ -42,10 +42,8 @@ namespace Bossjam.NPCs.Tubble.Attacks
                 npc.npc.spriteDirection = Math.Sign(npc.npc.velocity.X);
                 npc.melee = npc.npc.velocity.Y > 0;
 
-                if (npc.npc.velocity.Y < -2f)
-                    tubble.SetFrame(1);
-                else if (npc.npc.velocity.Y < 2)
-                    tubble.SetFrame(0);
+                if (npc.npc.velocity.Y < 2)
+                    tubble.SetFrame(4);
                 else
                     tubble.SetFrame(3);
 
@@ -76,7 +74,7 @@ namespace Bossjam.NPCs.Tubble.Attacks
                     npc.npc.ai[2] = 1;
                     npc.npc.velocity.X = -3 * dir;
                     npc.npc.noTileCollide = false;
-                    npc.npc.StrikeNPCNoInteraction(Main.rand.Next(3, 8), 0f, -1, false, false);
+                    npc.npc.StrikeNPCNoInteraction(Main.rand.Next(16, 26), 0f, -1, false, false);
                     npc.melee = false;
 
                     tubble.lastStunDir = dir;

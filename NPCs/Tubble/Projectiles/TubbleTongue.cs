@@ -59,14 +59,6 @@ namespace Bossjam.NPCs.Tubble.Projectiles
 
         private void MissedAI()
         {
-            if (Collision.SolidCollision(projectile.position, projectile.width, projectile.height))
-            {
-                _contact = true;
-                _time = -180;
-
-                projectile.velocity = Vector2.Zero;
-            }
-
             if (_contact && _time <= 0)
                 _time++;
             else if (_contact && _time > 0)
@@ -116,6 +108,15 @@ namespace Bossjam.NPCs.Tubble.Projectiles
         {
             float discard = 0;
             return Collision.CheckAABBvLineCollision(targetHitbox.Location.ToVector2(), targetHitbox.Size(), SpawnOrigin, projectile.Center, 24, ref discard);
+        }
+
+        public override bool OnTileCollide(Vector2 oldVelocity)
+        {
+            _contact = true;
+            _time = -300;
+
+            projectile.velocity = Vector2.Zero;
+            return false;
         }
 
         public override bool PreDraw(SpriteBatch spriteBatch, Color lightColor)

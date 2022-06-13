@@ -17,7 +17,7 @@ namespace Bossjam.NPCs.Tubble
         {
             DisplayName.SetDefault("Tubble");
 
-            Main.npcFrameCount[npc.type] = 4;
+            Main.npcFrameCount[npc.type] = 5;
         }
 
         public override void Defaults()
@@ -30,6 +30,8 @@ namespace Bossjam.NPCs.Tubble
             npc.aiStyle = -1;
             npc.knockBackResist = 0f;
             npc.dontTakeDamage = true;
+            npc.HitSound = SoundID.NPCHit1;
+            npc.DeathSound = SoundID.NPCDeath1;
         }
 
         public override void OnHit(int hitDirection, double damage)

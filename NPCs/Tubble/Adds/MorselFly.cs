@@ -26,6 +26,8 @@ namespace Bossjam.NPCs.Tubble.Adds
             npc.aiStyle = -1;
             npc.noGravity = true;
             npc.knockBackResist = 0f;
+            npc.HitSound = SoundID.NPCHit45;
+            npc.DeathSound = SoundID.NPCDeath47;
         }
 
         public override void OnHit(int hitDirection, double damage)
